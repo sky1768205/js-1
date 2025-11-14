@@ -1,4 +1,5 @@
 export default function DiscontOrder() {
+    // ghjk
     return (
         <div className="bg-green-700 p-1 rounded-lg  text-white">
             <h2 className="text-3xl font-bold mb-6 text-center">5% off on the first order</h2>
