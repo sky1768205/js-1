@@ -6,7 +6,7 @@ export default function CategoryCard() {
 
     useEffect(() => {
         async function getCategories() {
-            const resp = await fetch('http://localhost:3333/categories/all');
+            const resp = await fetch(`http://localhost:3333/categories/all`);
             if (resp.ok) {
                 const data = await resp.json();
                 setCategories(data);
@@ -27,9 +27,12 @@ export default function CategoryCard() {
                     >
                         <div className="relative h-48 w-full">
                             <img
-                                src={category.image}
-
+                                src={`http://localhost:3333${category.image}`}
+                                alt={category.title}
                                 className="w-full h-full object-cover"
+                                onError={(e) => {
+                                    e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                                }}
                             />
                         </div>
                         <div className="p-3 text-center">

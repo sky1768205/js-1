@@ -1,12 +1,12 @@
 export default function DiscontOrder() {
     return (
-        <div className="bg-green-700 p-8 rounded-lg text-white">
+        <div className="bg-green-700 p-1 rounded-lg  text-white">
             <h2 className="text-3xl font-bold mb-6 text-center">5% off on the first order</h2>
-            <div className="flex flex-col md:flex-row items-center gap-8 max-w-6xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify:between gap-8 max-w-6xl mx-auto">
 
                 <div>
                     <img
-                        src=""
+                        src="/public/image-20.png"
 
                         className="w-full max-w-md h-auto rounded-lg"
                     />

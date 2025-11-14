@@ -29,7 +29,8 @@ export default function Discont() {
 
                         <div className="bg-gray-100 h-48 mb-4 rounded flex items-center justify-center">
                             <img
-                                src={product.image}
+
+                                src={`http://localhost:3333${product.image}`}
 
                                 className="w-full h-full object-cover rounded"
                             />
