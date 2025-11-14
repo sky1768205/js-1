@@ -1,10 +1,30 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { NavLink, useParams } from "react-router"
+import { CartContext } from "../stores"
 
 export default function CategoryPage() {
     const { id } = useParams()
     const [category, setCategory] = useState()
     const [products, setProducts] = useState([])
+
+    const [cart, setCart] = useContext(CartContext)
+
+    function addToCart(product, e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (cart.findIndex(element => element.id === product.id) === -1) {
+            setCart(
+                [
+                    ...cart,
+                    {
+                        ...product,
+                        quantity: 1
+                    }
+                ]
+            )
+        }
+    }
 
     useEffect(() => {
         async function getCategory() {
@@ -16,13 +36,32 @@ export default function CategoryPage() {
         getCategory()
     }, [id])
 
+    function renderButton(product) {
+        const index = cart.findIndex(element => element.id === product.id)
+
+        if (index === -1) {
+            return (
+                <button
+                    onClick={(e) => addToCart(product, e)}
+                    className="absolute bottom-2 left-2 bg-green-500 hover:bg-black text-white px-4 py-2 rounded text-sm font-medium">
+                    Add to Cart
+                </button>
+            )
+        } else {
+            return (
+                <div className="absolute bottom-2 left-2 bg-gray-500 text-white px-4 py-2 rounded text-sm font-medium">
+                    In Cart: {cart[index].quantity}
+                </div>
+            )
+        }
+    }
+
     return (
         <div>
             {
                 category && (
                     <div className="p-4">
                         <h1 className="text-2xl font-bold mb-6">{category.title}</h1>
-
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             {products.map(product => (
@@ -37,10 +76,7 @@ export default function CategoryPage() {
                                                 src={`http://localhost:3333${product.image}`}
                                                 alt={product.title}
                                             />
-                                            <button className="absolute bottom-2 left-2
-                                         bg-green-500 hover:bg-black text-white px-4 py-2 rounded text-sm font-medium">
-                                                Add to cart
-                                            </button>
+                                            {renderButton(product)}
                                         </div>
                                         <div className="p-4">
                                             <h3 className="font-semibold text-gray-800 mb-2">
@@ -53,7 +89,6 @@ export default function CategoryPage() {
                                     </div>
                                 </NavLink>
                             ))}
-
                         </div>
                     </div>
                 )

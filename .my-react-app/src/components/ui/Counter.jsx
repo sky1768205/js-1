@@ -46,12 +46,17 @@ export default function Counter({ quantity, id }) {
 
 
     return (
-        <div>
-            <button onClick={decrement}>-</button>
-            <span>{number}</span>
-            <button onClick={increment}>+</button>
+        <div className="flex items-center border border-gray-300 rounded">
+            <button
+                onClick={decrement}
+                className="px-3 py-1 border-r border-gray-300 hover:bg-gray-100"
+            >-</button>
+            <span className="px-4 py-1">{number}</span>
+            <button
+                onClick={increment}
+                className="px-3 py-1 border-l border-gray-300 hover:bg-gray-100"
+            >+</button>
         </div>
-
     )
 
 }
