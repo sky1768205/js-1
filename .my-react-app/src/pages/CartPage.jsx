@@ -19,7 +19,7 @@ export default function CartPage() {
     const continueShopping = () => {
         navigate("/")
     }
-
+    //проверка
     // Если корзина пустая
     if (cart.length === 0) {
         return (
