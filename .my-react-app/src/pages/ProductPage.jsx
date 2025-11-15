@@ -1,17 +1,12 @@
-// src/pages/ProductPage.jsx
+import { useContext, useEffect, useState } from "react"
+import { useParams } from "react-router"
+import { CartContext } from "../stores";
 
-import { useEffect, useState, useContext } from "react"; 
-import { useParams } from "react-router-dom";
-import { CartContext } from "../stores"; 
+export default function ProductItemPage() {
+  const { id } = useParams()
+  const [product, setProduct] = useState([])
+  const [cart, setCart] = useContext(CartContext);
 
-
-export default function ProductPage() {
-  const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [cart, setCart] = useContext(CartContext); 
-
-  
   function addToCart(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -28,83 +23,81 @@ export default function ProductPage() {
   }
 
   useEffect(() => {
-    async function load() {
-      const resp = await fetch(`http://localhost:3333/products/all`);
-      const data = await resp.json();
-      const productData = Array.isArray(data) ? data[0] : data;
-      setProduct(productData);
+    async function getProduct() {
+      try {
+        const resp = await fetch(`http://localhost:3333/products/${id}`)
+        const data = await resp.json()
+
+        // Если API возвращает массив, берем первый элемент
+        if (Array.isArray(data)) {
+          setProduct(data[0])
+        } else {
+          setProduct(data)
+        }
+      } catch (error) {
+        console.error('Error loading product:', error)
+        // Fallback: загружаем все продукты и находим нужный
+        const respAll = await fetch(`http://localhost:3333/products/all`)
+        const allProducts = await respAll.json()
+        const foundProduct = allProducts.find(p => p.id === parseInt(id))
+        setProduct(foundProduct)
+      }
     }
-    load();
-  }, [id]);
+
+    if (id) {
+      getProduct()
+    }
+  }, [id])
+
 
   return (
-    <div className="p-4 max-w-5xl mx-auto">
+    <div className="p-4 max-w-4xl mx-auto">
       <button
         onClick={() => window.history.back()}
         className="mb-4 text-green-600 hover:text-green-800"
       >
-        ← back
+        ← Назад
       </button>
 
-      {product ? (
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div className="flex flex-col md:flex-row">
           <div className="md:w-1/2 p-6">
             <img
-              src={`http://localhost:3333${product.image}`}
-              alt={product.title || 'Товар'}
               className="w-full h-96 object-cover rounded-lg"
+              src={`http://localhost:3333${product.image}`}
+              alt={product.title}
               onError={(e) => {
-                e.target.src = "https://via.placeholder.com/500x500?text=No+Image";
+                e.target.src = "https://via.placeholder.com/500x500?text=No+Image"
               }}
             />
           </div>
 
           <div className="md:w-1/2 p-6">
-            <h1 className="text-2xl font-bold mb-2">
+            <h1 className="text-2xl font-bold mb-4 text-center md:text-left">
               {product.title}
             </h1>
 
-            <div className="text-3xl font-bold mb-4">
-              ${product.price}
-            </div>
-
-            <div className="flex items-center gap-2 mb-4">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="px-3 py-1 border border-gray-300 rounded"
-              >
-                −
-              </button>
-              <span className="px-3 py-1 border border-gray-300 rounded">
-                {quantity}
+            <div className="mb-6">
+              <span className="text-3xl font-bold">
+                ${product.price}
               </span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="px-3 py-1 border border-gray-300 rounded"
-              >
-                +
-              </button>
             </div>
 
-            
-            <button
-              onClick={addToCart} 
-              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium"
-            >
-              Add to cart
-            </button>
-
-            <div className="mt-6">
-              <h3 className="font-semibold mb-2">Description</h3>
+            <div className="mb-6">
               <p className="text-gray-600 leading-relaxed">
                 {product.description}
               </p>
             </div>
+
+            <button
+              onClick={addToCart}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium"
+            >
+              Add to cart
+            </button>
           </div>
         </div>
-      ) : (
-        <div className="p-6 text-center">Загрузка товара...</div>
-      )}
+      </div>
     </div>
-  );
+  )
 }
