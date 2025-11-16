@@ -28,7 +28,7 @@ export default function ProductItemPage() {
         const resp = await fetch(`http://localhost:3333/products/${id}`)
         const data = await resp.json()
 
-        // Если API возвращает массив, берем первый элемент
+        
         if (Array.isArray(data)) {
           setProduct(data[0])
         } else {
