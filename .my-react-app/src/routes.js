@@ -7,6 +7,7 @@ import CategoryPage from "./pages/CategoryPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
 import ProductsPage from "./pages/ProductsPage.jsx";
 import ProductPage from "./pages/ProductPage.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 
 
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
             {
                 path:'products/:id',
                 Component : ProductPage
+            },
+            {
+                path:"*",
+                Component: NotFound
             }
         ]
     }

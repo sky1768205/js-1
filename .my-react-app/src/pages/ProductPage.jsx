@@ -36,7 +36,6 @@ export default function ProductItemPage() {
         }
       } catch (error) {
         console.error('Error loading product:', error)
-        // Fallback: загружаем все продукты и находим нужный
         const respAll = await fetch(`http://localhost:3333/products/all`)
         const allProducts = await respAll.json()
         const foundProduct = allProducts.find(p => p.id === parseInt(id))
